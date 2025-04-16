@@ -1,24 +1,30 @@
-import { Router, Request, Response } from 'express';
-const router = Router();
+import { Request, Response, NextFunction } from 'express';
+import { registerUser, loginUser, verifyToken } from "../services/authServices";
 
-// mock signup
-router.post('/signup', (req: Request, res: Response) => {
-    const { username, email } = req.body;
+export const createUser = async (req: Request, res: Response) => {
+    try {
+        const user = await registerUser(req.body);
+        res.status(201).json(user);
+    } catch (error) {
+        res.status(400).json({ error: (error as Error).message });
+    }
+};
 
-    res.status(201).json({
-        message: 'User registered successfully',
-        data: { id: 1, username, email }
-    });
-});
+export const logUser = async (req: Request, res: Response) => {
+    try {
+        const access_token = await loginUser(req.body);
+        res.status(200).json({ access_token });
+    } catch (error) {
+        res.status(401).json({ error: (error as Error).message });
+    }
+};
 
-//mock login
-router.post('/login', (req: Request, res: Response) => {
-    const { email } = req.body;
-
-    res.status(200).json({
-        message: 'Login successful',
-        data: { id: 1, email, token: 'fake-jwt-token' }
-    });
-});
-
-export default router;
+export const authentication = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user_id = await verifyToken(req.headers.authorization);
+        req.user_id = user_id;
+        next();
+    } catch (error) {
+        res.status(401).json({ error: (error as Error).message });
+    }
+};

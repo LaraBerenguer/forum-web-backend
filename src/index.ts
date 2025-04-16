@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import authRouter from './controllers/auth';
 import userRouter from './routes/users';
+import authRouter from './routes/auth';
 
 dotenv.config();
 
