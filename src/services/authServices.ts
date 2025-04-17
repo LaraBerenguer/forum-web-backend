@@ -11,12 +11,24 @@ interface JwtPayload {
     id: number;
 }
 
+// mock user
+const mockUsers = [
+    {
+        id: 1,
+        username: 'mockUser',
+        email: 'mock@user.com',
+        password: 'password123'
+    }
+];
+
 export const registerUser = async (body: UserInterface) => {
 
-    // Validate that no user exists with that email
-    const existingUser = await User.findOne({
+    //mock
+    const existingUser = mockUsers.find(user => user.email === body.email);
+
+    /*const existingUser = await User.findOne({
         where: { email: body.email }
-    });
+    });*/
 
     if (existingUser) {
         throw new Error("Email already in use");
@@ -24,10 +36,19 @@ export const registerUser = async (body: UserInterface) => {
 
     const hashedPassword = await hash(body.password, 10);
 
-    const userDB = await User.create({
+    //mock
+    const newUser = {
+        id: mockUsers.length + 1,
+        ...body,
+        password: hashedPassword,
+    };
+
+    mockUsers.push(newUser);
+
+    /*const userDB = await User.create({
         ...body,
         password: hashedPassword
-    });
+    });*/
 };
 
 export const loginUser = async (body: LoginInterface) => {
@@ -37,9 +58,12 @@ export const loginUser = async (body: LoginInterface) => {
         throw new Error("Email and password are required");
     }
 
-    const user = await User.findOne({
+    //mock
+    const user = mockUsers.find(user => user.email === email);
+
+    /*const user = await User.findOne({
         where: { email }
-    });
+    });*/
 
     if (!user) {
         throw new Error("User not found");

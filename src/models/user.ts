@@ -1,7 +1,5 @@
 import { Model, DataTypes, Optional } from 'sequelize';
-import { Sequelize } from 'sequelize';
-
-const sequelize = new Sequelize(); //update when db
+import { sequelize } from '../database/database'
 
 interface UserAttributes {
   id: number;
@@ -13,7 +11,7 @@ interface UserAttributes {
 }
 
 //For creating a new user (id is optional)
-interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
+interface UserCreationAttributes extends Optional<UserAttributes, 'id'> { }
 
 // Define the model class with proper typing
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
