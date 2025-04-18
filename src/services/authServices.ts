@@ -49,6 +49,8 @@ export const registerUser = async (body: UserInterface) => {
         ...body,
         password: hashedPassword
     });*/
+
+    return newUser;
 };
 
 export const loginUser = async (body: LoginInterface) => {
@@ -79,9 +81,9 @@ export const loginUser = async (body: LoginInterface) => {
         throw new Error("SECRET_KEY is not defined in environment variables");
     }
 
-    const access_token = jwt.sign({ id: user.id }, process.env.SECRET_KEY);
+    const userToken = jwt.sign({ id: user.id }, process.env.SECRET_KEY);
 
-    return access_token;
+    return userToken;
 };
 
 export const verifyToken = async (authHeader?: string) => {
