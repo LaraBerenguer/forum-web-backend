@@ -3,8 +3,8 @@ import { registerUser, loginUser, verifyToken } from "../services/authServices";
 
 export const createUser = async (req: Request, res: Response) => {
     try {
-        const user = await registerUser(req.body);
-        res.status(201).json(user);
+        await registerUser(req.body);
+        res.status(201).json({ message: "User created successfully" });
     } catch (error) {
         res.status(400).json({ error: (error as Error).message });
     }
@@ -23,6 +23,7 @@ export const logUser = async (req: Request, res: Response) => {
 export const authentication = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user_id = await verifyToken(req.headers.authorization);
+        console.log("Token verified");
         req.user_id = user_id;
         next();
     } catch (error) {
